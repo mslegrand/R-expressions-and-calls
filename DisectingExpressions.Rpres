@@ -404,19 +404,43 @@ fn1(2)
 fn2(2)
 ```
 
-Summary of Expressions
+Turning a Call into a String 
+===
+Use **deparse** to turn a call into a character string.
+```{r}
+cl1<-quote(1+2)
+cl2<-parse(text="1+2")[[1]]
+identical(deparse(cl1),deparse(cl2))
+mode(deparse(cl1))
+deparse(cl1)
+```
+
+The Substitute-Deparse Trick
+===
+```{r}
+a<-3
+times<-function(x,y){
+  cl<-substitute(x*y)
+  paste(deparse(cl),"is",eval(cl))
+}
+times(2,a)
+```
+Since substitute, substitutes in the variables to form a call, (which is an unevaluated tree), by turning that call back into a string we have access to the names of  inputs to the function.
+
+Summary 
 ===
 - **Expressions** are return by **parse** and wrap **calls** in a list.
 - Use **expressions** when a list of **calls** is required
-
-Summary of Calls
-===
-
 - **Calls** and **Expressions** are specialized lists
 -  **Calls** are trees,  **Abstract Syntax Trees** coded using lists
 - A node on the **AST** is either a call-list or a value
 + The first element of a **call** list is  name (naming a functions)
 + Any subsequent elements occuring in a **call** list are children
+
+Summary --Continued--
+===
+
 - **calls** occur in  **function bodies**, are returned by **substitute**, etc.
 - **calls** can be manipulated and evaluated using **eval**
+- **deparse** turns a call into a character string, so together with substitute can be used to label the output of a function.
 
