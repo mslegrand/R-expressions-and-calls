@@ -283,7 +283,7 @@ eval(cl1)
 
 Dissecting a Call
 ===
-We dissect a call by examinin the components of **call** using the [[]] operator
+We can dissect a call and examine it's components  using the [[]] operator
 
 ```r
 cl1[[1]]
