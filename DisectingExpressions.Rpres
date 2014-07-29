@@ -51,7 +51,7 @@ We examine the components of expressions using the [[]] operator
  mode(ex1[[1]])
 ```
 
-Expressions are specialized Lists
+Expressions are Specialized Lists
 ===
 ```{r}
 cl<-call("+",1,2)
@@ -125,7 +125,7 @@ fn<-function(){1+2}
 body(fn)[[2]]
 ```
 
-Calls are Special Lists
+Calls are Specialized Lists
 ===
 ```{r}
 list(as.name("+"),1,2)->cl
@@ -134,7 +134,7 @@ identical(cl, call("+",1,2))
 ```
 **Calls** are specialized lists with mode ***call***
 
-Technically a **call** is  a primitive, and we are  doing some coercing. But as with **expressions**, it's most convenient to think of a **call** as some kind of _specialized_ list.
+Technically a **call** is  a primitive, and we are  doing some coercing. But as with **expressions**, the most convenient way to think of a **call** is as some kind of _specialized_ list.
 
 Evaluating Calls
 ===

@@ -83,7 +83,7 @@ We examine the components of expressions using the [[]] operator
 [1] "call"
 ```
 
-Expressions are specialized Lists
+Expressions are Specialized Lists
 ===
 
 ```r
@@ -235,7 +235,7 @@ body(fn)[[2]]
 1 + 2
 ```
 
-Calls are Special Lists
+Calls are Specialized Lists
 ===
 
 ```r
@@ -249,7 +249,7 @@ identical(cl, call("+",1,2))
 ```
 **Calls** are specialized lists with mode ***call***
 
-Technically a **call** is  a primitive, and we are  doing some coercing. But as with **expressions**, it's most convenient to think of a **call** as some kind of _specialized_ list.
+Technically a **call** is  a primitive, and we are  doing some coercing. But as with **expressions**, the most convenient way to think of a **call** is as some kind of _specialized_ list.
 
 Evaluating Calls
 ===
