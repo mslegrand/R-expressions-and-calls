@@ -1,5 +1,5 @@
 
-Dissecting R Calls and Expressions
+Dissecting R Calls, Expressions and Functions
 ========================================================
 author: S Legrand
 date: 2014.07.30
