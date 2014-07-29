@@ -26,7 +26,7 @@ But this begs the question, what does ***parse*** return?
 
 Parse Returns Expressions
 ===
-Parse returns an object called an **expression**
+A quick check shows that parse returns an object called an **expression**
 
 ```r
 ex1<-parse(text="1+2")
@@ -37,8 +37,9 @@ mode(ex1)
 [1] "expression"
 ```
 
+Invoking help on **expression** reveals other ways to create an expression
 
-Two Ways to Create Expressions
+More Ways to Create Expressions
 ===
 
 
@@ -50,11 +51,13 @@ Two Ways to Create Expressions
 ```
 expression(1 + 2)
 ```
+
 ***
 
 ```r
-#using parse
- parse(text="1+2")
+#using as.expression 
+cl<-quote(1+2)
+as.expression(cl)
 ```
 
 ```
@@ -62,13 +65,27 @@ expression(1 + 2)
 ```
 
 
-Disecting Expressions
+Whats Inside an Expression?
 ===
-We examine the components of expressions using the [[]] operator
+What we want know is whats inside, that is, what are expressions made of?
+
+So we start by dissection of an expression 
+
+Dissecting an Expression
+===
+We  dissect  an expression using the [[]] operator
 
 ```r
- ex1<-expression(1+2)
- ex1[[1]]
+ex<-expression(1+2)
+length(ex)
+```
+
+```
+[1] 1
+```
+
+```r
+ex[[1]]
 ```
 
 ```
@@ -76,7 +93,7 @@ We examine the components of expressions using the [[]] operator
 ```
 
 ```r
- mode(ex1[[1]])
+mode(ex[[1]])
 ```
 
 ```
@@ -88,9 +105,9 @@ Expressions are Specialized Lists
 
 ```r
 cl<-call("+",1,2)
-el<-list(cl)
-mode(el)<-"expression"
-identical(el, expression(1+2))
+ex.cl<-list(cl)
+mode(ex.cl)<-"expression"
+identical(ex.cl, expression(1+2))
 ```
 
 ```
@@ -98,13 +115,13 @@ identical(el, expression(1+2))
 ```
 So an **expression** is a specialized list with mode ***expression*** 
 
-Technically an **expression** is a primitive, and we are doing some coercing, but
-it's easiest to think of them as specialized lists.
+Technically an **expression** is a primitive, and we may be doing some coercing, but
+it's easiest to think of them as some kind of specialized list.
 
 Building Blocks of Expressions 
 ===
 The building blocks of an **expression** can be any of the following:
-- calls (_where_ _things_ _get_ _done_)
+- calls 
 - symbols 
 - constants
 
@@ -177,7 +194,7 @@ expression(x <- 1, x + 2)
 
 Calls
 ===
-- **Expressions** usually have some **calls** for members
+- **Expressions** often have **calls** for elements
 - **Calls** represent something to be evaluated, for example: 1+2
 - **Calls** are _where_ _things_ _get_ _done_
 
@@ -398,16 +415,6 @@ followed by it's children.
 
 - We call this  tree an **abstract syntax tree (AST)**
 
-
-The Tree Structure
-===
-- cl is the root node: Non-terminal =(+, 1 * 2, 3)
-- cl[[1]] is the root node label: Label   = +
-- cl[[2]] is the first child: Non-terminal  = (*, 1, 2)
-- cl[[3]] is the second child: = 3
-- cl[[2]][[1]] is the label of the first child node: Label  = *
-- cl[[2]][[2]] is the first child of [[1]][[2]]: Terminal  = 1
-- cl[[3]][[2]] is the second child of [[1]][[2]]: Terminal = 2 
 
 The Tree Structure of the Call cl
 ===
