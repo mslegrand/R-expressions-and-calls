@@ -83,7 +83,7 @@ We examine the components of expressions using the [[]] operator
 [1] "call"
 ```
 
-Expressions are special Lists
+Expressions are specialized Lists
 ===
 
 ```r
@@ -98,14 +98,17 @@ identical(el, expression(1+2))
 ```
 So an **expression** is a specialized list with mode ***expression*** 
 
-The Expression Building Blocks
+Technically an **expression** is a primitive, and we are doing some coercing, but
+it's easiest to think of them as specialized lists.
+
+Building Blocks of Expressions 
 ===
 The building blocks of an **expression** can be any of the following:
-- calls
+- calls (_where_ _things_ _get_ _done_)
 - symbols 
 - constants
 
-Some of Simple Expressions
+Some Simple Expressions
 ===
 
 ```r
@@ -135,7 +138,7 @@ Some of Simple Expressions
 [1] "numeric"
 ```
 
-Some checks for the Mode
+Some Checks for the Mode
 ===
 
 ```r
@@ -149,7 +152,7 @@ Some checks for the Mode
 [1] TRUE TRUE TRUE TRUE
 ```
 
-Expressions with 2 Calls
+Expressions Containing 2 Calls
 ===
 **Expressions** can contain multiple components.
 For example the following **expression** contain 2 **calls**
@@ -172,12 +175,18 @@ ex2
 expression(x <- 1, x + 2)
 ```
 
+Calls
+===
+- **Expressions** usually have some **calls** for members
+- **Calls** represent something to be evaluated, for example: 1+2
+- **Calls** are _where_ _things_ _get_ _done_
 
 Different Ways to Create a Call
 ===
 
 ```r
-parse(text="1+2")[[1]]
+parse(
+  text="1+2")[[1]]
 ```
 
 ```
@@ -193,7 +202,7 @@ call("+",1,2)
 ```
 
 ```r
-substitute(1+2)
+quote(1+2)
 ```
 
 ```
@@ -202,7 +211,7 @@ substitute(1+2)
 ***
 
 ```r
-as.call(list(as.name("+"),1,2))
+as.call( list(as.name("+"), 1,2))
 ```
 
 ```
@@ -210,7 +219,7 @@ as.call(list(as.name("+"),1,2))
 ```
 
 ```r
-quote(1+2)
+substitute(1+2)
 ```
 
 ```
@@ -239,6 +248,8 @@ identical(cl, call("+",1,2))
 [1] TRUE
 ```
 **Calls** are specialized lists with mode ***call***
+
+Technically a **call** is  a primitive, and we are  doing some coercing. But as with **expressions**, it's most convenient to think of a **call** as some kind of _specialized_ list.
 
 Evaluating Calls
 ===
