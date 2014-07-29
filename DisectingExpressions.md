@@ -868,7 +868,7 @@ Summary (1/3)
 Summary --Continued-- (2/3)
 ===
 - **Calls** a are specialized lists of mode ***"call"***
-+ The first element of a **call**  is  name (naming a function)
++ The first element of a **call**  is  name (usually naming a function)
 + Any subsequent elements occuring  list are children 
 + A child can be either a **call** or a **constant** (value)
 - **Calls** are  **Abstract Syntax Trees** coded via their list structures
