@@ -827,7 +827,7 @@ mode(ex1)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Creating Expressions</h3>
+<h3>Two Ways to Create Expressions</h3>
 <div class="column column1 slideContent" >
 <pre><code class="r">#directly
  expression(1+2)
@@ -853,8 +853,10 @@ mode(ex1)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Components of Expressions can be examined using [[]]</h3>
+<h3>Disecting Expressions</h3>
 <div class="slideContent" >
+<p>We examine the components of expressions using the [[]] operator</p>
+
 <pre><code class="r"> ex1&lt;-expression(1+2)
  ex1[[1]]
 </code></pre>
@@ -889,7 +891,7 @@ identical(el, expression(1+2))
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>The Building Blocks of Expressions</h3>
+<h3>The Expression Building Blocks</h3>
 <div class="slideContent" >
 <p>The building blocks of an <strong>expression</strong> can be any of the following:</p>
 
@@ -903,7 +905,7 @@ identical(el, expression(1+2))
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Examples of Simple Expressions</h3>
+<h3>Some of Simple Expressions</h3>
 <div class="slideContent" >
 <pre><code class="r"> ex1&lt;-expression(1+2)
  mode(ex1[[1]])
@@ -930,7 +932,7 @@ identical(el, expression(1+2))
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Checks for the mode</h3>
+<h3>Some checks for the Mode</h3>
 <div class="slideContent" >
 <pre><code class="r">  c(is.expression(expression(1+2)),
   is.call(expression(1+2)[[1]]),
@@ -945,9 +947,10 @@ identical(el, expression(1+2))
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Expressions Can Contain Multiple Components</h3>
+<h3>Expressions with 2 Calls</h3>
 <div class="slideContent" >
-<p>For example the following <strong>expression</strong> contain 2 <strong>calls</strong></p>
+<p><strong>Expressions</strong> can contain multiple components.
+For example the following <strong>expression</strong> contain 2 <strong>calls</strong></p>
 
 <pre><code class="r">ex1&lt;-expression(x&lt;-1,x+2)
 ex1
@@ -967,7 +970,7 @@ ex2
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Creating Some Calls</h3>
+<h3>Different Ways to Create a Call</h3>
 <div class="column column1 slideContent" >
 <pre><code class="r">parse(text=&quot;1+2&quot;)[[1]]
 </code></pre>
@@ -1016,7 +1019,7 @@ body(fn)[[2]]
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Calls are lists</h3>
+<h3>Calls are Special Lists</h3>
 <div class="slideContent" >
 <pre><code class="r">list(as.name(&quot;+&quot;),1,2)-&gt;cl
 mode(cl)&lt;-&quot;call&quot;
@@ -1047,9 +1050,9 @@ eval(cl1)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Decomposing the Call</h3>
+<h3>Dissecting a Call</h3>
 <div class="slideContent" >
-<p>Again, the components of <strong>call</strong> are addressable by [[]]</p>
+<p>We dissect a call by examinin the components of <strong>call</strong> using the [[]] operator</p>
 
 <pre><code class="r">cl1[[1]]
 </code></pre>
@@ -1073,9 +1076,9 @@ eval(cl1)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3> Calls can even be Modified!</h3>
+<h3>Calls can even be Modified!</h3>
 <div class="column column1 slideContent" >
-<pre><code class="r">cl1&lt;-substitute(1+2)
+<pre><code class="r">cl1&lt;-quote(1+2)
 cl1
 </code></pre>
 
@@ -1083,7 +1086,7 @@ cl1
 </code></pre>
 
 <pre><code class="r">fn&lt;-function(x,y){
-  x^y
+  1+x^y
 }
 </code></pre>
 
@@ -1103,41 +1106,7 @@ cl1 # Replaced + with fn
 <pre><code class="r">eval(cl1) 
 </code></pre>
 
-<pre><code>[1] 1
-</code></pre>
-
-</div>
-
-</section>
-<section data-transition="linear" data-transition-speed="default">
-<h3>The same result using ^</h3>
-<div class="column column1 slideContent" >
-<pre><code class="r">cl1&lt;-substitute(1+2)
-cl1
-</code></pre>
-
-<pre><code>1 + 2
-</code></pre>
-
-<pre><code class="r">cl1[[1]]&lt;-as.name(&quot;^&quot;) 
-</code></pre>
-
-
-</div>
-
-<div class="column column2 slideContent" >
-
-
-<pre><code class="r">cl1 # Replaced + with ^
-</code></pre>
-
-<pre><code>1^2
-</code></pre>
-
-<pre><code class="r">eval(cl1) 
-</code></pre>
-
-<pre><code>[1] 1
+<pre><code>[1] 2
 </code></pre>
 
 </div>
@@ -1146,20 +1115,20 @@ cl1
 <section data-transition="linear" data-transition-speed="default">
 <h3>A slightly more complex example</h3>
 <div class="slideContent" >
-<pre><code class="r">cl&lt;-parse(text=&quot;1*2+3&quot;)[[1]]
+<pre><code class="r">cl&lt;-quote(1*2+3)
 cl
 </code></pre>
 
 <pre><code>1 * 2 + 3
 </code></pre>
 
-<p>Here we have both * and + inside our <strong>call</strong></p>
+<p>Note: we now have both * and + inside our <strong>call</strong></p>
 
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Drilling down reveals a **tree** </h3>
+<h3>Drilling down Reveals a Tree</h3>
 <div class="column column1 slideContent" >
 <pre><code class="r">cl[[1]]
 </code></pre>
@@ -1201,9 +1170,10 @@ cl
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Tree Nodes</h3>
+<h3>A Call is a Tree</h3>
 <div class="slideContent" >
 <ul>
+<li>A <strong>Call</strong> is a tree consisting of <strong>terminal</strong> and <strong>non-terminal</strong> nodes.</li>
 <li>A <strong>non-terminal node</strong> is list consisting of a name (usually a function)
 followed by it&#39;s children.</li>
 <li><p>Ex: call(&#39;+&#39;,1,2)</p></li>
@@ -1215,7 +1185,7 @@ followed by it&#39;s children.</li>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>The tree structure</h3>
+<h3>The Tree Structure</h3>
 <div class="slideContent" >
 <ul>
 <li>cl is the root node: Non-terminal =(+, 1 * 2, 3)</li>
@@ -1231,7 +1201,7 @@ followed by it&#39;s children.</li>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>The tree structure</h3>
+<h3>The Tree Structure of the Call cl</h3>
 <div class="slideContent" >
 <table><thead>
 <tr>
@@ -1312,7 +1282,7 @@ call_tree(cl)
 <section data-transition="linear" data-transition-speed="default">
 <h3>Graphicaly</h3>
 <div class="column column1 slideContent" >
-<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-23"/> </p>
+<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-21"/> </p>
 
 
 </div>
@@ -1326,20 +1296,22 @@ call_tree(cl)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>We can even manipulate to rearrange precedence!</h3>
+<h3>Manipulating a Call Tree</h3>
 <div class="slideContent" >
-<pre><code class="r">cl1&lt;-parse(text=&quot;1*2+3&quot;)[[1]]
-cl1
+<p>We can even manipulate to rearrange precedence!</p>
+
+<pre><code class="r">cl.orig&lt;-parse(text=&quot;1*2+3&quot;)[[1]]
+cl.orig
 </code></pre>
 
 <pre><code>1 * 2 + 3
 </code></pre>
 
-<pre><code class="r">tmp&lt;-cl1
-cl2&lt;-cl1[[2]]
-cl2[[3]]-&gt;tmp[[2]]
-cl2[[3]]&lt;-tmp
-cl2
+<pre><code class="r">tmp&lt;-cl.orig
+cl.mod&lt;-cl.orig[[2]]
+cl.mod[[3]]-&gt;tmp[[2]]
+cl.mod[[3]]&lt;-tmp
+cl.mod
 </code></pre>
 
 <pre><code>1 * (2 + 3)
@@ -1349,9 +1321,9 @@ cl2
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Comparing the results</h3>
+<h3>The Original vs Modified Tree</h3>
 <div class="column column1 slideContent" >
-<pre><code class="r">call_tree(cl1)
+<pre><code class="r">call_tree(cl.orig) 
 </code></pre>
 
 <pre><code>\- ()
@@ -1369,7 +1341,7 @@ cl2
 <div class="column column2 slideContent" >
 
 
-<pre><code class="r">call_tree(cl2)
+<pre><code class="r">call_tree(cl.mod)
 </code></pre>
 
 <pre><code>\- ()
@@ -1385,7 +1357,7 @@ cl2
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>The body of a function is a call</h3>
+<h3>The Body of a Function is a Call</h3>
 <div class="column column1 slideContent" >
 <pre><code class="r">fn&lt;-function(){1+2}
 cl&lt;-body(fn)
@@ -1416,9 +1388,13 @@ mode(cl)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Calls can contain calls</h3>
+<h3>Calls may contain Calls</h3>
 <div class="column column1 slideContent" >
-<pre><code class="r">cl&lt;-body(function(){1+2})
+<pre><code class="r">cl&lt;-body(
+  function(){
+  1+2
+  }
+)
 mode(cl)
 </code></pre>
 
@@ -1448,6 +1424,9 @@ mode(cl)
 
 <pre><code>1 + 2
 </code></pre>
+
+<p>Here, the call cl, contains
+ the call cl[[2]]</p>
 
 </div>
 
@@ -1494,23 +1473,22 @@ length(cl)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Building a function from scratch</h3>
+<h3>Piece-wise Function Construction</h3>
 <div class="slideContent" >
-<p>We can construct a new function by </p>
+<p>We can construct a new function in steps:</p>
 
-<ul>
-<li>starting with an empty
-function skelton </li>
-<li>add a body</li>
-<li>supply an environment</li>
-<li>supply any arguments</li>
-</ul>
+<ol>
+<li>Start with an empty skeleton function </li>
+<li>Insert a body</li>
+<li>Specify the arguments</li>
+<li>Specify an environment</li>
+</ol>
 
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>A function skeleton</h3>
+<h3>A Skeleton Function </h3>
 <div class="slideContent" >
 <pre><code class="r">fn&lt;-function(){}
 fn
@@ -1523,7 +1501,7 @@ fn
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Replacing the function body</h3>
+<h3>Inserting a Body</h3>
 <div class="slideContent" >
 <pre><code class="r">body(fn)&lt;-call(&quot;{&quot;,quote(y&lt;-x+1),quote(2*y) )
 fn
@@ -1542,7 +1520,7 @@ fn
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Replacing the argument list</h3>
+<h3>Specifying  Arguments</h3>
 <div class="slideContent" >
 <pre><code class="r">formals(fn)&lt;-alist(x=)
 fn
@@ -1562,7 +1540,7 @@ we would have specified <strong><em>alist(x=)</em></strong></p>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Replacing the environment</h3>
+<h3>Specifying am Environment</h3>
 <div class="slideContent" >
 <pre><code class="r">environment(fn) &lt;- .GlobalEnv
 environment(fn)
@@ -1577,10 +1555,10 @@ environment(fn)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Creating function bodies programically</h3>
+<h3>Variable Functions On the Fly</h3>
 <div class="slideContent" >
-<p>When we need to programmically generate
-a list of calls for the function body, expressions become useful</p>
+<p>When we don&#39;t know what or how many statements the function may contain, then 
+to create the body we might generate a list of either <em>**calls</em>* or <strong><em>character strings</em></strong>. </p>
 
 <p>To illustrate this, we take an example motivated by continued fractions.
 Given n, we want to generate a function that contains n copies of the 
@@ -1595,14 +1573,28 @@ line </p>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Calls to Expression to Body</h3>
+<h3>Generating a List of Calls</h3>
 <div class="slideContent" >
-<pre><code class="r">n&lt;-4
+<p>First we generate a list of calls</p>
+
+<pre><code class="r">n&lt;-3
 fn1&lt;-function(x){} #A skeleton
 cl&lt;-quote(x&lt;-1/(1+x))
-ex&lt;-c(rep(list(cl),4),quote(x))   
-mode(ex)&lt;-&quot;expression&quot;
-body(fn1)&lt;-as.call(c(as.name(&quot;{&quot;),ex))
+cl.list&lt;-c(rep(list(cl),n),quote(x))
+#display the list as text using deparse
+deparse(cl.list) #for display only!!
+</code></pre>
+
+<pre><code>[1] &quot;list(x &lt;- 1/(1 + x), x &lt;- 1/(1 + x), x &lt;- 1/(1 + x), x)&quot;
+</code></pre>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>Body Creation from a List of Calls</h3>
+<div class="slideContent" >
+<pre><code class="r">body(fn1)&lt;-as.call(c(as.name(&quot;{&quot;),cl.list))
 fn1
 </code></pre>
 
@@ -1611,22 +1603,45 @@ fn1
     x &lt;- 1/(1 + x)
     x &lt;- 1/(1 + x)
     x &lt;- 1/(1 + x)
-    x &lt;- 1/(1 + x)
     x
 }
+</code></pre>
+
+<p>Note  use <strong>as.call</strong> with lists of calls</p>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>Generating a List of Strings</h3>
+<div class="slideContent" >
+<pre><code class="r">n&lt;-3
+s&lt;-&quot;x&lt;-1/(1+x)&quot;
+s.list&lt;-c(rep(list(cl),n),&quot;x&quot;)
+s.list
+</code></pre>
+
+<pre><code>[[1]]
+x &lt;- 1/(1 + x)
+
+[[2]]
+x &lt;- 1/(1 + x)
+
+[[3]]
+x &lt;- 1/(1 + x)
+
+[[4]]
+[1] &quot;x&quot;
 </code></pre>
 
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Strings to Expression to Body</h3>
+<h3>Body from a List of Strings</h3>
 <div class="slideContent" >
-<pre><code class="r">n&lt;-4
-fn2&lt;-function(x){} #A skeleton
-cl&lt;-&quot;x&lt;-1/(1+x)&quot;
-ch&lt;-paste(c(rep(list(cl),4),&quot;x&quot;),collapse=&quot;;&quot;)   
-ex&lt;-parse(text=ch)
+<pre><code class="r">fn2&lt;-function(x){} #A skeleton
+ex&lt;-parse(text=paste(s.list,collapse=&quot;;&quot;))
 body(fn2)&lt;-as.call(c(as.name(&quot;{&quot;),ex))
 fn2
 </code></pre>
@@ -1636,10 +1651,12 @@ fn2
     x &lt;- 1/(1 + x)
     x &lt;- 1/(1 + x)
     x &lt;- 1/(1 + x)
-    x &lt;- 1/(1 + x)
     x
 }
 </code></pre>
+
+<p>Note, here we use <strong>parse</strong>, which produces an <strong>expression</strong>, which
+becomes the argument of <strong>as.call</strong></p>
 
 </div>
 
@@ -1656,40 +1673,103 @@ fn2
 <pre><code class="r">fn1(2)
 </code></pre>
 
-<pre><code>[1] 0.6364
+<pre><code>[1] 0.5714
 </code></pre>
 
 <pre><code class="r">fn2(2)
 </code></pre>
 
-<pre><code>[1] 0.6364
+<pre><code>[1] 0.5714
 </code></pre>
 
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Summary of Expressions</h3>
+<h3>Turning a Call into a String </h3>
+<div class="slideContent" >
+<p>Use <strong>deparse</strong> to turn a call into a character string.</p>
+
+<pre><code class="r">cl1&lt;-quote(1+2)
+cl2&lt;-parse(text=&quot;1+2&quot;)[[1]]
+identical(deparse(cl1),deparse(cl2))
+</code></pre>
+
+<pre><code>[1] TRUE
+</code></pre>
+
+<pre><code class="r">mode(deparse(cl1))
+</code></pre>
+
+<pre><code>[1] &quot;character&quot;
+</code></pre>
+
+<pre><code class="r">deparse(cl1)
+</code></pre>
+
+<pre><code>[1] &quot;1 + 2&quot;
+</code></pre>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>The Substitute-Deparse Trick</h3>
+<div class="slideContent" >
+<pre><code class="r">a&lt;-3
+times&lt;-function(x,y){
+  cl&lt;-substitute(x*y)
+  paste(deparse(cl),&quot;is&quot;,eval(cl))
+}
+times(2,a)
+</code></pre>
+
+<pre><code>[1] &quot;2 * a is 6&quot;
+</code></pre>
+
+<p>Upon executation, <strong>substitute</strong>, substitutes <strong><em>2</em></strong> and <strong><em>a</em></strong> for <strong><em>x</em></strong> and <strong><em>y</em></strong> respectively to form a <strong>call</strong>, (which is the unevaluated AST <strong><em>quote(2 * a)</em></strong>). Then by turning that <strong>call</strong> back into a string via <strong>deparse</strong> we obtain the names of function inputs.</p>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>Summary (1/3)</h3>
 <div class="slideContent" >
 <ul>
-<li><strong>Expressions</strong> are return by <strong>parse</strong> and wrap <strong>calls</strong> in a list.</li>
-<li>Use <strong>expressions</strong> when a list of <strong>calls</strong> is required</li>
+<li>Use <strong>parse</strong> to turn a character string into an <strong>expression</strong></li>
+<li>Use <strong>deparse</strong> to turn a <strong>call</strong> into a character string</li>
+<li><strong>Expressions</strong> are specialied lists of mode <strong><em>&ldquo;expression&rdquo;</em></strong></li>
+<li>An elements of an <strong>Expression</strong> may be <strong>call</strong>, <strong>symbol</strong>, ro <strong>constant</strong> </li>
 </ul>
 
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Summary of Calls</h3>
+<h3>Summary --Continued-- (2/3)</h3>
 <div class="slideContent" >
 <ul>
-<li><strong>Calls</strong> and <strong>Expressions</strong> are specialized lists</li>
-<li> <strong>Calls</strong> are trees,  <strong>Abstract Syntax Trees</strong> coded using lists</li>
-<li>A node on the <strong>AST</strong> is either a call-list or a value</li>
-<li>The first element of a <strong>call</strong> list is  name (naming a functions)</li>
-<li>Any subsequent elements occuring in a <strong>call</strong> list are children</li>
-<li><strong>calls</strong> occur in  <strong>function bodies</strong>, are returned by <strong>substitute</strong>, etc.</li>
-<li><strong>calls</strong> can be manipulated and evaluated using <strong>eval</strong></li>
+<li><strong>Calls</strong> a are specialized lists of mode <strong><em>&ldquo;call&rdquo;</em></strong></li>
+<li>The first element of a <strong>call</strong>  is  name (naming a function)</li>
+<li>Any subsequent elements occuring  list are children </li>
+<li>A child can be either a <strong>call</strong> or a <strong>constant</strong> (value)</li>
+<li><strong>Calls</strong> are  <strong>Abstract Syntax Trees</strong> coded via their list structures</li>
+<li>A node on the <strong>AST</strong> is either a <strong>call</strong> or a value</li>
+<li>The structure inside a <strong>call</strong> can be manipulated.</li>
+</ul>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>Summary --Continued-- (3/3)</h3>
+<div class="slideContent" >
+<ul>
+<li>Use <strong>as.call</strong> to turn a list of calls into a call.</li>
+<li>A function body is a <strong>call</strong> with the first element being the  symbol { </li>
+<li><strong>calls</strong>  are returned by <strong>substitute</strong>, <strong>quote</strong>, etc.</li>
+<li>Use <strong>eval</strong> to evaluate both <strong>expressions</strong> and <strong>calls</strong></li>
+<li>Together <strong>deparse</strong> and <strong>substitute</strong> can be used to obtain the runtime input symbols of within a function.</li>
 </ul>
 
 </div>

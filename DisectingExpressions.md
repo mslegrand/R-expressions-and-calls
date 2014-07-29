@@ -657,6 +657,7 @@ function (x)
     2 * y
 }
 ```
+
 The function now has an argument ***x***. If we wanted a default value of ***x=2***,
 we would have specified ***alist(x=)***
 
@@ -671,13 +672,13 @@ environment(fn)
 ```
 <environment: R_GlobalEnv>
 ```
+
 Here we set the environment of the function to be the Global environment
 
-Creating Functions On the Fly
+Variable Functions On the Fly
 ===
-When we don't know what ot how many statements the function may contain, then 
-to create the body we need to generate
-a ***list of calls***  and this is when **expressions** become useful
+When we don't know what or how many statements the function may contain, then 
+to create the body we might generate a list of either ***calls** or ***character strings***. 
 
 To illustrate this, we take an example motivated by continued fractions.
 Given n, we want to generate a function that contains n copies of the 
@@ -688,16 +689,30 @@ x<-1/(1+x)
 
 We illustrate 2 approaches:
 
-Calls to Expression to Body
+Generating a List of Calls
 ===
+First we generate a list of calls
+
 
 ```r
-n<-4
+n<-3
 fn1<-function(x){} #A skeleton
 cl<-quote(x<-1/(1+x))
-ex<-c(rep(list(cl),4),quote(x))   
-mode(ex)<-"expression"
-body(fn1)<-as.call(c(as.name("{"),ex))
+cl.list<-c(rep(list(cl),n),quote(x))
+#display the list as text using deparse
+deparse(cl.list) #for display only!!
+```
+
+```
+[1] "list(x <- 1/(1 + x), x <- 1/(1 + x), x <- 1/(1 + x), x)"
+```
+
+Body Creation from a List of Calls
+===
+
+
+```r
+body(fn1)<-as.call(c(as.name("{"),cl.list))
 fn1
 ```
 
@@ -707,20 +722,42 @@ function (x)
     x <- 1/(1 + x)
     x <- 1/(1 + x)
     x <- 1/(1 + x)
-    x <- 1/(1 + x)
     x
 }
 ```
 
-Strings to Expression to Body
+Note  use **as.call** with lists of calls
+
+Generating a List of Strings
 ===
 
 ```r
-n<-4
+n<-3
+s<-"x<-1/(1+x)"
+s.list<-c(rep(list(cl),n),"x")
+s.list
+```
+
+```
+[[1]]
+x <- 1/(1 + x)
+
+[[2]]
+x <- 1/(1 + x)
+
+[[3]]
+x <- 1/(1 + x)
+
+[[4]]
+[1] "x"
+```
+
+Body from a List of Strings
+===
+
+```r
 fn2<-function(x){} #A skeleton
-cl<-"x<-1/(1+x)"
-ch<-paste(c(rep(list(cl),4),"x"),collapse=";")   
-ex<-parse(text=ch)
+ex<-parse(text=paste(s.list,collapse=";"))
 body(fn2)<-as.call(c(as.name("{"),ex))
 fn2
 ```
@@ -731,10 +768,12 @@ function (x)
     x <- 1/(1 + x)
     x <- 1/(1 + x)
     x <- 1/(1 + x)
-    x <- 1/(1 + x)
     x
 }
 ```
+Note, here we use **parse**, which produces an **expression**, which
+becomes the argument of **as.call**
+
 Comparing and Running fn1, fn2
 ===
 
@@ -751,7 +790,7 @@ fn1(2)
 ```
 
 ```
-[1] 0.6364
+[1] 0.5714
 ```
 
 ```r
@@ -759,7 +798,7 @@ fn2(2)
 ```
 
 ```
-[1] 0.6364
+[1] 0.5714
 ```
 
 Turning a Call into a String 
@@ -807,22 +846,30 @@ times(2,a)
 ```
 [1] "2 * a is 6"
 ```
-Since substitute, substitutes in the variables to form a call, (which is an unevaluated tree), by turning that call back into a string we have access to the names of  inputs to the function.
+Upon executation, **substitute**, substitutes ***2*** and ***a*** for ***x*** and ***y*** respectively to form a **call**, (which is the unevaluated AST ***quote(2 * a)***). Then by turning that **call** back into a string via **deparse** we obtain the names of function inputs.
 
-Summary 
+Summary (1/3)
 ===
-- **Expressions** are return by **parse** and wrap **calls** in a list.
-- Use **expressions** when a list of **calls** is required
-- **Calls** and **Expressions** are specialized lists
--  **Calls** are trees,  **Abstract Syntax Trees** coded using lists
-- A node on the **AST** is either a call-list or a value
-+ The first element of a **call** list is  name (naming a functions)
-+ Any subsequent elements occuring in a **call** list are children
+- Use **parse** to turn a character string into an **expression**
+- Use **deparse** to turn a **call** into a character string
+- **Expressions** are specialied lists of mode ***"expression"***
++ An elements of an **Expression** may be **call**, **symbol**, ro **constant** 
 
-Summary --Continued--
+Summary --Continued-- (2/3)
 ===
+- **Calls** a are specialized lists of mode ***"call"***
++ The first element of a **call**  is  name (naming a function)
++ Any subsequent elements occuring  list are children 
++ A child can be either a **call** or a **constant** (value)
+- **Calls** are  **Abstract Syntax Trees** coded via their list structures
++ A node on the **AST** is either a **call** or a value
+- The structure inside a **call** can be manipulated.
 
-- **calls** occur in  **function bodies**, are returned by **substitute**, etc.
-- **calls** can be manipulated and evaluated using **eval**
-- **deparse** turns a call into a character string, so together with substitute can be used to label the output of a function.
+Summary --Continued-- (3/3)
+===
+- Use **as.call** to turn a list of calls into a call.
+- A function body is a **call** with the first element being the  symbol { 
+- **calls**  are returned by **substitute**, **quote**, etc.
+- Use **eval** to evaluate both **expressions** and **calls**
+- Together **deparse** and **substitute** can be used to obtain the runtime input symbols of within a function.
 
