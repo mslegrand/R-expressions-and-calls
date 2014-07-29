@@ -676,7 +676,7 @@ function (x)
 ```
 
 The function now has an argument ***x***. If we wanted a default value of ***x=2***,
-we would have specified ***alist(x=)***
+we would have specified ***alist(x=2)***
 
 Specifying am Environment
 ===
