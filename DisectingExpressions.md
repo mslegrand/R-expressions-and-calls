@@ -1,7 +1,6 @@
 
 Dissecting R Calls and Expressions
 ========================================================
-left: 80%
 author: S Legrand
 date: 2014.07.30
 
