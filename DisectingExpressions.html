@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Dissecting R Calls and Expressions</title>
+  <title>Dissecting R Calls, Expressions and Functions</title>
     
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -784,7 +784,7 @@ hljs.initHighlightingOnLoad();
   <div class="slides">
 
 <section data-state="section" data-transition="linear" data-transition-speed="default">
-<h1>Dissecting R Calls and Expressions</h1><p>S Legrand<br/>2014.07.30</p>
+<h1>Dissecting R Calls, Expressions and Functions</h1><p>S Legrand<br/>2014.07.30</p>
 
 <div class="slideContent" >
 <div style='text-align: bottom;'>
@@ -814,7 +814,7 @@ is to use <strong><em>eval(parse(text=myString))</em></strong>. For example</p>
 <section data-transition="linear" data-transition-speed="default">
 <h3>Parse Returns Expressions</h3>
 <div class="slideContent" >
-<p>Parse returns an object called an <strong>expression</strong></p>
+<p>A quick check shows that parse returns an object called an <strong>expression</strong></p>
 
 <pre><code class="r">ex1&lt;-parse(text=&quot;1+2&quot;)
 mode(ex1)
@@ -823,11 +823,13 @@ mode(ex1)
 <pre><code>[1] &quot;expression&quot;
 </code></pre>
 
+<p>Invoking help on <strong>expression</strong> reveals other ways to create an expression</p>
+
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Two Ways to Create Expressions</h3>
+<h3>More Ways to Create Expressions</h3>
 <div class="column column1 slideContent" >
 <pre><code class="r">#directly
  expression(1+2)
@@ -842,8 +844,9 @@ mode(ex1)
 <div class="column column2 slideContent" >
 
 
-<pre><code class="r">#using parse
- parse(text=&quot;1+2&quot;)
+<pre><code class="r">#using as.expression 
+cl&lt;-quote(1+2)
+as.expression(cl)
 </code></pre>
 
 <pre><code>expression(1 + 2)
@@ -853,18 +856,34 @@ mode(ex1)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Disecting Expressions</h3>
+<h3>Whats Inside an Expression?</h3>
 <div class="slideContent" >
-<p>We examine the components of expressions using the [[]] operator</p>
+<p>What we want know is whats inside, that is, what are expressions made of?</p>
 
-<pre><code class="r"> ex1&lt;-expression(1+2)
- ex1[[1]]
+<p>So we start by dissection of an expression </p>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>Dissecting an Expression</h3>
+<div class="slideContent" >
+<p>We  dissect  an expression using the [[]] operator</p>
+
+<pre><code class="r">ex&lt;-expression(1+2)
+length(ex)
+</code></pre>
+
+<pre><code>[1] 1
+</code></pre>
+
+<pre><code class="r">ex[[1]]
 </code></pre>
 
 <pre><code>1 + 2
 </code></pre>
 
-<pre><code class="r"> mode(ex1[[1]])
+<pre><code class="r">mode(ex[[1]])
 </code></pre>
 
 <pre><code>[1] &quot;call&quot;
@@ -874,12 +893,12 @@ mode(ex1)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Expressions are special Lists</h3>
+<h3>Think: Expression = Special List</h3>
 <div class="slideContent" >
 <pre><code class="r">cl&lt;-call(&quot;+&quot;,1,2)
-el&lt;-list(cl)
-mode(el)&lt;-&quot;expression&quot;
-identical(el, expression(1+2))
+ex.cl&lt;-list(cl)
+mode(ex.cl)&lt;-&quot;expression&quot;
+identical(ex.cl, expression(1+2))
 </code></pre>
 
 <pre><code>[1] TRUE
@@ -887,16 +906,19 @@ identical(el, expression(1+2))
 
 <p>So an <strong>expression</strong> is a specialized list with mode <strong><em>expression</em></strong> </p>
 
+<p>Technically an <strong>expression</strong> is a primitive, and we may be doing some coercing, but
+it&#39;s easiest to think of them as some kind of specialized list.</p>
+
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>The Expression Building Blocks</h3>
+<h3>Building Blocks of Expressions </h3>
 <div class="slideContent" >
 <p>The building blocks of an <strong>expression</strong> can be any of the following:</p>
 
 <ul>
-<li>calls</li>
+<li>calls </li>
 <li>symbols </li>
 <li>constants</li>
 </ul>
@@ -905,7 +927,7 @@ identical(el, expression(1+2))
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Some of Simple Expressions</h3>
+<h3>Some Simple Expressions</h3>
 <div class="slideContent" >
 <pre><code class="r"> ex1&lt;-expression(1+2)
  mode(ex1[[1]])
@@ -932,7 +954,7 @@ identical(el, expression(1+2))
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Some checks for the Mode</h3>
+<h3>Some Checks for the Mode</h3>
 <div class="slideContent" >
 <pre><code class="r">  c(is.expression(expression(1+2)),
   is.call(expression(1+2)[[1]]),
@@ -947,7 +969,7 @@ identical(el, expression(1+2))
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Expressions with 2 Calls</h3>
+<h3>Expressions Can Contain Multiple Calls</h3>
 <div class="slideContent" >
 <p><strong>Expressions</strong> can contain multiple components.
 For example the following <strong>expression</strong> contain 2 <strong>calls</strong></p>
@@ -970,9 +992,22 @@ ex2
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Different Ways to Create a Call</h3>
+<h3>Calls</h3>
+<div class="slideContent" >
+<ul>
+<li><strong>Calls</strong> often occur as elements fo  <strong>expressions</strong> </li>
+<li><strong>Calls</strong> represent something to be evaluated, for example: 1+2</li>
+<li><strong>Calls</strong> are <em>where</em> <em>things</em> <em>get</em> <em>done</em></li>
+</ul>
+
+</div>
+
+</section>
+<section data-transition="linear" data-transition-speed="default">
+<h3>6 Ways to Create  Calls</h3>
 <div class="column column1 slideContent" >
-<pre><code class="r">parse(text=&quot;1+2&quot;)[[1]]
+<pre><code class="r">parse(
+  text=&quot;1+2&quot;)[[1]]
 </code></pre>
 
 <pre><code>1 + 2
@@ -984,7 +1019,7 @@ ex2
 <pre><code>1 + 2
 </code></pre>
 
-<pre><code class="r">substitute(1+2)
+<pre><code class="r">quote(1+2)
 </code></pre>
 
 <pre><code>1 + 2
@@ -996,13 +1031,13 @@ ex2
 <div class="column column2 slideContent" >
 
 
-<pre><code class="r">as.call(list(as.name(&quot;+&quot;),1,2))
+<pre><code class="r">as.call( list(as.name(&quot;+&quot;), 1,2))
 </code></pre>
 
 <pre><code>1 + 2
 </code></pre>
 
-<pre><code class="r">quote(1+2)
+<pre><code class="r">substitute(1+2)
 </code></pre>
 
 <pre><code>1 + 2
@@ -1019,7 +1054,7 @@ body(fn)[[2]]
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Calls are Special Lists</h3>
+<h3>Calls are Specialized Lists</h3>
 <div class="slideContent" >
 <pre><code class="r">list(as.name(&quot;+&quot;),1,2)-&gt;cl
 mode(cl)&lt;-&quot;call&quot;
@@ -1030,6 +1065,8 @@ identical(cl, call(&quot;+&quot;,1,2))
 </code></pre>
 
 <p><strong>Calls</strong> are specialized lists with mode <strong><em>call</em></strong></p>
+
+<p>Technically a <strong>call</strong> is  a primitive, and we are  doing some coercing. But as with <strong>expressions</strong>, the most convenient way to think of a <strong>call</strong> is as some kind of <em>specialized</em> list.</p>
 
 </div>
 
@@ -1052,7 +1089,7 @@ eval(cl1)
 <section data-transition="linear" data-transition-speed="default">
 <h3>Dissecting a Call</h3>
 <div class="slideContent" >
-<p>We dissect a call by examinin the components of <strong>call</strong> using the [[]] operator</p>
+<p>We can dissect a call and examine it&#39;s components  using the [[]] operator</p>
 
 <pre><code class="r">cl1[[1]]
 </code></pre>
@@ -1185,22 +1222,6 @@ followed by it&#39;s children.</li>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>The Tree Structure</h3>
-<div class="slideContent" >
-<ul>
-<li>cl is the root node: Non-terminal =(+, 1 * 2, 3)</li>
-<li>cl[[1]] is the root node label: Label   = +</li>
-<li>cl[[2]] is the first child: Non-terminal  = (*, 1, 2)</li>
-<li>cl[[3]] is the second child: = 3</li>
-<li>cl[[2]][[1]] is the label of the first child node: Label  = *</li>
-<li>cl[[2]][[2]] is the first child of [[1]][[2]]: Terminal  = 1</li>
-<li>cl[[3]][[2]] is the second child of [[1]][[2]]: Terminal = 2 </li>
-</ul>
-
-</div>
-
-</section>
-<section data-transition="linear" data-transition-speed="default">
 <h3>The Tree Structure of the Call cl</h3>
 <div class="slideContent" >
 <table><thead>
@@ -1282,7 +1303,7 @@ call_tree(cl)
 <section data-transition="linear" data-transition-speed="default">
 <h3>Graphicaly</h3>
 <div class="column column1 slideContent" >
-<p><img src="data:image/png;base64,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" alt="plot of chunk unnamed-chunk-21"/> </p>
+<p><img src="data:image/png;base64,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p2O9AyKSn5+/x6mv5ouLizsW929+85su93vxxRc79lu/fr0jWYLBoJo1a5YKBAIqEAis1nvUAT2cXO9fVFlZqfr376969+6tRETdf//9royrFOvdK/gseo1WrVoV09jYeE16erojz79nz56O+zfeeGOX+1111VUd9+vr6x3JkpmZKTU1NRIOh0VEVpaUlHzPkYEAj3J6vZ+uublZbrvtNgmFQvLHP/5RbrnlFtmwYYM8//zzjo8twnr3Cgpeo8bGxpljxoxx7PlTUlJk6dKlsnTpUklNTe1yv4MHD3bcHzJkiGN5MjIypLa2VkRELMt63rbtrzk2GOAxTq/3073xxhvywQcfyLx582Ty5Mny3HPPSVxcnPz0pz+VtrY2VzKw3vXrqTtANKuvr8+bNGmSY88/ZcoUmTJlyjn3OXnypGzcuFFERHw+nxQUFDiWJzMzUyorK+WKK64QERGl1HoRmebYgICHOL3eTzdr1iy57LLL5Bvf+IaIfPbF/htvvCHp6enSp08fVzKw3vXjDF6jUCiUkpKS4uqYn376qWzfvl1ef/11WbNmjYwePVrefvttERF5/PHHxck8I0eOPOPdAhH5jm3bGY4NCHiI2+t94sSJEh8f3/Hfubm5kpiY6Nr4rHf9OIPXqLW1td+AAQNcHXPLli1y9913n7Htsssuk+eee04mT57s6NhJSUnS1NR0xjal1H0iMtvRgQEP0LHedWK968cZPOSTTz6Rhx56SEpLS3UMf9ebb77pznuGAHRjvbuIgtcoJiYm5NRV612ZPXu2KKXkyJEj8t5778lPfvITiY+Pl/LycsnNzZXt27c7NnZDQ4MkJCR02t67d293rjwCNNKx3nVivetHwWvUv3//6v379+saW0aPHi2PPPKIbNmyRXw+n7S2tsqSJUscG7O6uloGDx7cabvP5+P7cjCezvWuA+tdPwpeowEDBmwtKyvTHUOys7MlNzdXRESCwaA0NjY6Mk4wGDzrRXyWZbl7pSGggVfWu1tY7/pR8Br169fv9+Xl5Y48dzgclpkzZ8q0adPkySefPO/+1157bcf9z392NdKCwaAMHTq003alVJIjAwIe4uR69yLWu34UvEarV69ujY+P3+vEV/U+n0/27t0rr776qvz2t7897/4HDhzouN+/f/+I56moqJDk5GTx+fgnh+jk5Hr3Gta7N3D0NRs1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" alt="plot of chunk unnamed-chunk-21"/> </p>
 
 
 </div>
@@ -1534,13 +1555,13 @@ fn
 </code></pre>
 
 <p>The function now has an argument <strong><em>x</em></strong>. If we wanted a default value of <strong><em>x=2</em></strong>,
-we would have specified <strong><em>alist(x=)</em></strong></p>
+we would have specified <strong><em>alist(x=2)</em></strong></p>
 
 </div>
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Specifying am Environment</h3>
+<h3>Specifying an Environment</h3>
 <div class="slideContent" >
 <pre><code class="r">environment(fn) &lt;- .GlobalEnv
 environment(fn)
@@ -1733,7 +1754,7 @@ times(2,a)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Summary (1/3)</h3>
+<h3>Summary (1&#x2F;3)</h3>
 <div class="slideContent" >
 <ul>
 <li>Use <strong>parse</strong> to turn a character string into an <strong>expression</strong></li>
@@ -1746,14 +1767,14 @@ times(2,a)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Summary --Continued-- (2/3)</h3>
+<h3>Summary --Continued-- (2&#x2F;3)</h3>
 <div class="slideContent" >
 <ul>
-<li><strong>Calls</strong> a are specialized lists of mode <strong><em>&ldquo;call&rdquo;</em></strong></li>
-<li>The first element of a <strong>call</strong>  is  name (naming a function)</li>
+<li><strong>Calls</strong> are specialized lists of mode <strong><em>&ldquo;call&rdquo;</em></strong></li>
+<li>The first element of a <strong>call</strong>  is  name (usually naming a function)</li>
 <li>Any subsequent elements occuring  list are children </li>
 <li>A child can be either a <strong>call</strong> or a <strong>constant</strong> (value)</li>
-<li><strong>Calls</strong> are  <strong>Abstract Syntax Trees</strong> coded via their list structures</li>
+<li><strong>Calls</strong> are  <strong>Abstract Syntax Trees</strong> coded as  <strong><em>liss</em></strong> structures</li>
 <li>A node on the <strong>AST</strong> is either a <strong>call</strong> or a value</li>
 <li>The structure inside a <strong>call</strong> can be manipulated.</li>
 </ul>
@@ -1762,7 +1783,7 @@ times(2,a)
 
 </section>
 <section data-transition="linear" data-transition-speed="default">
-<h3>Summary --Continued-- (3/3)</h3>
+<h3>Summary --Continued-- (3&#x2F;3)</h3>
 <div class="slideContent" >
 <ul>
 <li>Use <strong>as.call</strong> to turn a list of calls into a call.</li>

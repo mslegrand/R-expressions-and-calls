@@ -100,7 +100,7 @@ mode(ex[[1]])
 [1] "call"
 ```
 
-Expressions are Specialized Lists
+Think: Expression = Special List
 ===
 
 ```r
@@ -169,7 +169,7 @@ Some Checks for the Mode
 [1] TRUE TRUE TRUE TRUE
 ```
 
-Expressions Containing 2 Calls
+Expressions Can Contain Multiple Calls
 ===
 **Expressions** can contain multiple components.
 For example the following **expression** contain 2 **calls**
@@ -194,11 +194,11 @@ expression(x <- 1, x + 2)
 
 Calls
 ===
-- **Expressions** often have **calls** for elements
+- **Calls** often occur as elements fo  **expressions** 
 - **Calls** represent something to be evaluated, for example: 1+2
 - **Calls** are _where_ _things_ _get_ _done_
 
-Different Ways to Create a Call
+6 Ways to Create  Calls
 ===
 
 ```r
@@ -678,7 +678,7 @@ function (x)
 The function now has an argument ***x***. If we wanted a default value of ***x=2***,
 we would have specified ***alist(x=2)***
 
-Specifying am Environment
+Specifying an Environment
 ===
 
 ```r
@@ -874,11 +874,11 @@ Summary (1/3)
 
 Summary --Continued-- (2/3)
 ===
-- **Calls** a are specialized lists of mode ***"call"***
+- **Calls** are specialized lists of mode ***"call"***
 + The first element of a **call**  is  name (usually naming a function)
 + Any subsequent elements occuring  list are children 
 + A child can be either a **call** or a **constant** (value)
-- **Calls** are  **Abstract Syntax Trees** coded via their list structures
+- **Calls** are  **Abstract Syntax Trees** coded as  ***liss*** structures
 + A node on the **AST** is either a **call** or a value
 - The structure inside a **call** can be manipulated.
 
